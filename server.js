@@ -22,14 +22,20 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 // ^^ Magic code!!
 
-router.route('/getposts').get(function(req, res) {
+router.route('/posts').get(function(req, res) {
     mongo.findDocuments({},"posts", (data)=> {
         res.status(200).send(data)
     })
 });
 
-router.route('/post').post(function(req, res) {
+router.route('/posts').post(function(req, res) {
     mongo.insertDocument({test:"testdocumemtn"},"posts", ()=> {
-        console.log("successfully inserted");
+        res.status(200).send("successfully added the post")
     });
+})
+
+router.route('/posts').delete(function(req,res) {
+    mongo.removeDocument({},"posts",()=> {
+        res.status(200).send("successfully removed the post")
+    })
 })

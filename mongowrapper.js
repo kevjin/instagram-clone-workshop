@@ -6,7 +6,6 @@ const url = 'mongodb://admin:pass123@ds163758.mlab.com:63758/insta'
 const databaseName = "insta"
 
 var insertDocument = function(data, collectionName, callback) {
-
     MongoClient.connect(url, function(err, client) {
         assert.equal(null, err);
         const db = client.db("insta");
