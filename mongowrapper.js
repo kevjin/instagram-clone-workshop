@@ -30,12 +30,8 @@ var removeDocument = function(data, collectionName, callback) {
         const db = client.db("insta");
         var collection = db.collection(collectionName);
         // Insert a documents
-        collection.deleteOne(data, function(err, result) {
-            assert.equal(err, null);
-            assert.equal(1, result.result.n);
-            console.log("Removed the document successfully");
-            callback(result);
-          });
+        collection.deleteMany(data);
+        callback();
         client.close();
       });
 }

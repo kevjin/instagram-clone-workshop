@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Instagram</title>
   <link rel="stylesheet" href="main.css">
-  <link rel="icon" href="/favicon.png" sizes="16x16" type="image/png">
+  <link rel="icon" href="https://instagram-brand.com/wp-content/themes/ig-branding/assets/images/ig-logo-email.png" sizes="16x16" type="image/png">
   <link rel="canonical" href="http://example.com/">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <meta name="description" content="…">
@@ -27,6 +27,15 @@
                 <input class="add-comment" placeholder="Add a comment..." type="text">
             </div>
         </div>
+</div>
+<div class="create-post">
+    <form name="createpost" onsubmit="return createPost()">
+    <input placeholder = "Username" class="create-post-input" type="text" name="username"><br>
+    <input placeholder = "Profile Picture (url)" class="create-post-input" type="text" name="profpic">
+    <input placeholder = "Picture to Post (url)" class="create-post-input" type="text" name="postpic">
+    <input placeholder = "Post Description" class="create-post-input" type="text" name="desc">
+    <input type="submit" class="submit-post" value="Create Post">
+    </form>
 </div>
 <script type="text/javascript" async="" src="index.js"></script>
 </body>

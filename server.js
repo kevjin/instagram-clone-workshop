@@ -29,7 +29,8 @@ router.route('/posts').get(function(req, res) {
 });
 
 router.route('/posts').post(function(req, res) {
-    mongo.insertDocument({test:"testdocumemtn"},"posts", ()=> {
+    req.body.likes = 0;
+    mongo.insertDocument(req.body,"posts", ()=> {
         res.status(200).send("successfully added the post")
     });
 })

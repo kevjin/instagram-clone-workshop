@@ -21,11 +21,38 @@
     padding-top: 100px;
     padding-bottom: 50px;
 }
+.create-post {
+    width: 400px;
+    padding: 20px;
+    position: fixed;
+    top: 400px;
+    right: 0px;
+    text-align: center;
+    background-color: #e2e2e2;
+}
+.create-post-input {
+    border: none;
+    padding: 2% 2% 2% 2%;
+    width: 96%;
+    background-color: #f7f7f7;
+    margin: 10px;
+}
+.submit-post {
+    font-size: 20px;
+    border: none;
+    padding: 8px;
+    border-radius: 6px;
+}
+.submit-post:hover {
+    background-color: #606060;
+    color: white;
+}
 .post {
     width: 100%;
     margin-top: 30px;
     background-color: #f7f7f7;
     border: 1px solid #e5e5e5;
+    overflow: hidden;
 }
 .username {
     font-weight: bold;
@@ -49,7 +76,6 @@
 
 .post-picture {
     width: 800px;
-    height: 800px;
 }
 .post-likes {
     height: 30px;
