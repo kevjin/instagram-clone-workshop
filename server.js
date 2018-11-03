@@ -17,6 +17,9 @@ res.header("Access-Control-Allow-Origin", "*");
 res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 next();
 });
+
+app.use('/', express.static('public'))
+
 app.use('/api', router);
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -30,8 +33,10 @@ router.route('/posts').get(function(req, res) {
 
 router.route('/posts').post(function(req, res) {
     req.body.likes = 0;
+    console.log("what up");
     mongo.insertDocument(req.body,"posts", ()=> {
-        res.status(200).send("successfully added the post")
+        console.log("added the post");
+        res.status(200).send("successfully added the post");
     });
 })
 
