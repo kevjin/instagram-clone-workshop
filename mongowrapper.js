@@ -2,7 +2,7 @@ const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 
 //Params for the user
-const url = 'mongodb://admin:pass123@ds163758.mlab.com:63758/insta'
+const url = ''
 const databaseName = "insta"
 
 var insertDocument = function(data, collectionName, callback) {
