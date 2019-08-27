@@ -15,7 +15,7 @@ let mongoClient = null;
 let db = null;
 const openConnection = () => {
   MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
-    assert(err, _);
+    // assert(null, err); // To debug
     mongoClient = client;
     db = client.db(DATABASE_NAME);
   })
@@ -23,6 +23,7 @@ const openConnection = () => {
 
 // Close the database connection when the server stops.
 const shutdown = () => {
+  console.log("gracefully shutting down..")
   mongoClient.close();
   process.exit(0);
 }
@@ -30,18 +31,18 @@ process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
 
 const insertDocument = function(data, collectionName) {
-    const collection = db.collection(collectionName);
-    collection.insertOne(
-      data, function(err, result) {
-        try {
-          assert.equal(err, null);
-          assert.equal(1, result.result.n);
-          assert.equal(1, result.ops.length);
-        } catch (e) {
-          return Promise.reject(e);
-        }
-      return Promise.resolve("Inserted document successfully");
-    });
+  const collection = db.collection(collectionName);
+  collection.insertOne(
+    data, function(err, result) {
+      try {
+        assert.equal(err, null);
+        assert.equal(1, result.result.n);
+        assert.equal(1, result.ops.length);
+      } catch (e) {
+        return Promise.reject(e);
+      }
+    return Promise.resolve("Inserted document successfully");
+  });
 }
 
 const removeDocument = function(data, collectionName) {
@@ -56,6 +57,10 @@ const removeDocument = function(data, collectionName) {
 
 const findDocuments = function(data, collectionName, callback) {
   const collection = db.collection(collectionName);
+  if (!collection) {
+    return Promise.reject(`No collection in the DB with name "${collectionName}" was found.`);
+  }
+
   collection.find(data).toArray(function(err, docs) {
       if (err) {
         return Promise.reject(err);
