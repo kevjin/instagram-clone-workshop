@@ -1,13 +1,15 @@
 reload();
 
+//Reload the webpage with all instagram data
 function reload() {
-    $.get("http://localhost:4000/api/posts", function(data, status){
+    $.get("http://localhost:4000/api/posts", function(data, status){ //Goes to this address to get data
         data.forEach(post => {
             addPost(post.profPic, post.username,post.postPic,post.likes,post.desc);
         });
 });
 }
 
+//Transforms JSON data into actual instagram posts
 function addPost(profPic,username,postPic,likes,desc) {
 $('.container').prepend(`
 <div class="post">
@@ -26,6 +28,8 @@ $('.container').prepend(`
 `);
 }
 
+//Sends a new instagram post in the form of JSON to the backend server, which saves it to the database.
+//Why cant the website access the database directly? Why is there a million websites and only 1 server?
 function createPost() {
     let username = document.forms["createpost"]["username"].value;
     let profpic = document.forms["createpost"]["profpic"].value;
