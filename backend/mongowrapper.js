@@ -14,8 +14,8 @@ const DATABASE_NAME = "insta"
 let mongoClient = null;
 let db = null;
 const openConnection = () => {
-  MongoClient.connect(url, { useNewUrlParser: true }, (_, client) => {
-    // assert(null, _);
+  MongoClient.connect(url, { useNewUrlParser: true }, (err, client) => {
+    assert(err, _);
     mongoClient = client;
     db = client.db(DATABASE_NAME);
   })

@@ -31,13 +31,15 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 router.route('/posts').post(function (req,res) {
     req.body.likes = 0;
-    mongo.insertDocument(req.body, "posts", () => {
-        res.status(200).send("successfully added the post")
+    mongo.insertDocument(req.body, "posts").then(() => {
+        res.status(200).send("successfully created the post")
+    }).catch(() => {
+        res.status(500).send("failed to create post")
     })
 })
 
-router.route('/posts').get(function(req, res) { // why do I need this?
-    mongo.findDocuments({},"posts", (data)=> {
+router.route('/posts').get(function(_, res) {
+    mongo.findDocuments({},"posts").then((data) => {
         res.status(200).send(data)
-    })
+    }).catch(() => {res.status(500).send("failed to get posts")})
 });
