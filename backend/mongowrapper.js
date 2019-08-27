@@ -1,4 +1,3 @@
-require('dotenv').config();
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 
@@ -8,51 +7,64 @@ const username = process.env.MONGO_USER
 const password = process.env.MONGO_PASSWORD
 const hostUrl = process.env.MONGO_HOST
 const url = `mongodb://${username}:${password}@${hostUrl}`
-const databaseName = "insta"
+const DATABASE_NAME = "insta"
 
-var insertDocument = function(data, collectionName, callback) {
-    MongoClient.connect(url, function(err, client) {
-        assert.equal(null, err);
-        const db = client.db(databaseName);
-        var collection = db.collection(collectionName);
-        // Insert a documents
-        collection.insertOne(
-          data, function(err, result) {
+// Open a MongoDB connection when the server starts and share the connection
+// between all DB actions.
+let mongoClient = null;
+let db = null;
+const openConnection = () => {
+  MongoClient.connect(url, { useNewUrlParser: true }, (_, client) => {
+    // assert(null, _);
+    mongoClient = client;
+    db = client.db(DATABASE_NAME);
+  })
+}
+
+// Close the database connection when the server stops.
+const shutdown = () => {
+  mongoClient.close();
+  process.exit(0);
+}
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
+
+const insertDocument = function(data, collectionName) {
+    const collection = db.collection(collectionName);
+    collection.insertOne(
+      data, function(err, result) {
+        try {
           assert.equal(err, null);
           assert.equal(1, result.result.n);
           assert.equal(1, result.ops.length);
-          console.log("Inserted document successfully");
-          callback(result);
-        });
-        client.close();
-      });
+        } catch (e) {
+          return Promise.reject(e);
+        }
+      return Promise.resolve("Inserted document successfully");
+    });
 }
 
-var removeDocument = function(data, collectionName, callback) {
-    MongoClient.connect(url, function(err, client) {
-        assert.equal(null, err);
-        const db = client.db(databaseName);
-        var collection = db.collection(collectionName);
-        collection.deleteMany(data);
-        callback();
-        client.close();
-      });
+const removeDocument = function(data, collectionName) {
+  try {
+    const collection = db.collection(collectionName);
+    collection.deleteMany(data);
+    return Promise.resolve("Deleted documents successfully");
+  } catch (e) {
+      return Promise.reject(e);
+  }
 }
 
-var findDocuments = function(data, collectionName, callback) {
-    MongoClient.connect(url, function(err, client) {
-        assert.equal(null, err);
-        const db = client.db(databaseName);
-        var collection = db.collection(collectionName);
-        collection.find(data).toArray(function(err, docs) {
-            assert.equal(err, null);
-            console.log("Searched for documents successfully");
-            callback(docs);
-          });
-        client.close();
-      });
+const findDocuments = function(data, collectionName, callback) {
+  const collection = db.collection(collectionName);
+  collection.find(data).toArray(function(err, docs) {
+      if (err) {
+        return Promise.reject(err);
+      }
+      return Promise.resolve(docs);
+  });
 }
 module.exports = {
+    openConnection: openConnection,
     insertDocument: insertDocument,
     removeDocument: removeDocument,
     findDocuments: findDocuments
