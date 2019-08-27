@@ -1,14 +1,19 @@
+require('dotenv').config();
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 
-//Params for the user
-const url = 'mongodb://admin:password123@ds151383.mlab.com:51383/instagramclone'
+// Make sure to store database credentials in .env
+// Never store them publicly!
+const username = process.env.MONGO_USER
+const password = process.env.MONGO_PASSWORD
+const hostUrl = process.env.MONGO_HOST
+const url = `mongodb://${username}:${password}@${hostUrl}`
 const databaseName = "insta"
 
 var insertDocument = function(data, collectionName, callback) {
     MongoClient.connect(url, function(err, client) {
         assert.equal(null, err);
-        const db = client.db("insta");
+        const db = client.db(databaseName);
         var collection = db.collection(collectionName);
         // Insert a documents
         collection.insertOne(
@@ -24,12 +29,10 @@ var insertDocument = function(data, collectionName, callback) {
 }
 
 var removeDocument = function(data, collectionName, callback) {
-
     MongoClient.connect(url, function(err, client) {
         assert.equal(null, err);
-        const db = client.db("insta");
+        const db = client.db(databaseName);
         var collection = db.collection(collectionName);
-        // Insert a documents
         collection.deleteMany(data);
         callback();
         client.close();
@@ -37,12 +40,10 @@ var removeDocument = function(data, collectionName, callback) {
 }
 
 var findDocuments = function(data, collectionName, callback) {
-
     MongoClient.connect(url, function(err, client) {
         assert.equal(null, err);
-        const db = client.db("insta");
+        const db = client.db(databaseName);
         var collection = db.collection(collectionName);
-        // Insert a documents
         collection.find(data).toArray(function(err, docs) {
             assert.equal(err, null);
             console.log("Searched for documents successfully");
